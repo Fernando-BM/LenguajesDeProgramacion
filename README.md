@@ -6,6 +6,6 @@
 
 
 
-> Incluye prácticas, tareas y puntos extra echos durante el curso.
+> Incluye prácticas, tareas y puntos extra realizados durante el curso.
 
-
+	
