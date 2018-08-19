@@ -89,10 +89,38 @@
   )
 
 
+
+
+
+
+
+;; Función auxiliar que calcula el cuadrado s-dígito de un número natural n.
+;; sdigito: number -> number
+(define (sdigito n m)
+  (cond
+  [(< m 20)  
+  (if (< n 10)
+        n 
+        (sdigito (+ (expt (modulo n 10) 2 )
+                    (expt (sdigito (quotient n 10)(+ m 1)) 2)) (+ m 1)))]
+  [else -1])
+  )
+
 ;; Predicado que dado un número natural, determina si un número es feliz.
 ;; es-feliz?: number -> boolean
 (define (es-feliz? n)
-    #| Aquí va su código. |#)
+    (cond
+      [(< n 10) (if (= 1 (sdigito (expt n 2) 0))
+                    #t
+                    #f)
+                    ]
+      [else (if (= 1 (sdigito n 0))
+                #t
+                #f)]))
+
+
+
+
 
 ;; Función recursiva que encuentra los números primos en un rango de m a n usando la Criba de 
 ;; Eratóstenes.
