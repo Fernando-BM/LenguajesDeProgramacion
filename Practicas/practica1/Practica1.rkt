@@ -1,7 +1,8 @@
 #lang plai
 
 #| Lenguajes de Programación
-   Práctica 1 |#
+   Práctica 1 
+	Bernal Martínez Fernando 2019-1|#
 
 ;; Función que toma dos números enteros y los eleva a sí mismos para luego sumar las potencias, es
 ;; decir, debe regresar a^b + b^a.
@@ -120,30 +121,135 @@
 
 
 
+  
+;; Función Auxiliar recursiva que regresa sin los multiplos de n
+;; elimina-tablas (listof number) number number -> (listof number)
+(define (elimina-tablas lista n meta)
+  
+    (match lista
+      ['() '()]
+      [(cons x xs)
+     
+     (if(= (modulo x n) 0)
+        (elimina-tablas xs n meta)
+        (cons x (elimina-tablas xs n meta)) 
+        )]
+    )
 
+  )
+
+;; Función Auxiliar recursiva que itera las lista y elimina los multiplos de n+1 
+;; (elimina-rec (listof number) number number -> (listof number)
+(define (elimina-rec lista n meta)
+  (if(<= n 10)
+     (elimina-rec(elimina-tablas lista n meta) (+ n 1) meta)
+     lista
+     ))
+
+
+;; Función Auxiliar recursiva que regresa la lista en un rango [m n]
+;; mi-lista number number -> (listof number)
+(define (mi-lista m n)
+  (cond
+    [(= n m)(cons n empty)]
+    [else (cons m (mi-lista (+ 1 m) n))]
+   ))
 
 ;; Función recursiva que encuentra los números primos en un rango de m a n usando la Criba de 
 ;; Eratóstenes.
 ;; criba-eratostenes number number -> (listof number)
 (define (criba-eratostenes n)
-    #| Aquí va su código. |#)
+ (if (>= n 7)
+     (cons 2 (cons 3 (cons 5 (cons 7 (elimina-rec (mi-lista 2 n) 2 n)))))
+     (if (>= n 5)
+         '(2 3 5)
+         (if (>= n 3)
+             '(2 3)
+             '(2)
+             )))
+  
+)
 
+
+
+;;Función aux recursiva que toma un número y una lista y regresa lista de pares con la descomposición en primos
+;; del mismo.
+;; div-primos: number -> (listof number)
+
+(define (div-primos n lista contador)
+  (if (equal? lista '())
+    empty
+    
+  (if(= (modulo n (car lista)) 0)
+
+     (cons (cons (car lista) (+ 1 contador)) (div-primos (quotient n (car lista)) lista (+ 1 contador)))
+    
+     (div-primos n (cdr lista) (* contador 0)))))
+
+
+;;Función aux recursiva que toma un un lista y elimina tuplas repetidas
+;; del mismo.
+;; div-primos: (listof number) -> (listof number)
+(define (elimina-rep lista)
+  (if (equal? lista (cons (car lista) empty)) ;;Si la lista es igual a su cabeza, es decir, que es de un elemento entonces regresamos el elemento
+      (cons (car lista) empty)
+   (if (= (caar lista) (caadr lista))  (elimina-rep (cdr lista)) (cons (car lista) (elimina-rep (cdr lista) )) )
+
+   )
+  )
 ;; Función recursiva que toma un número y regresa una lista de pares con la descomposición en primos
 ;; del mismo.
 ;; descomposicion-primos: number -> (listof number)
 (define (descomposicion-primos n)
-    #| Aquí va su código. |#)
+  (elimina-rep (div-primos n (criba-eratostenes n) 0))
+  )
+
+
+
+(define chinos (lambda (numero)
+  
+  (if (= numero 0)
+      'rei
+      (if (= numero 1)
+          'ichi
+          (if (= numero 2)
+              'ni
+              (if (= numero 3)
+                  'san
+                  (if (= numero 4)
+                      'yon
+                      (if (= numero 5)
+                          'go
+                          (if (= numero 6)
+                              'roku
+                              (if (= numero 7)
+                                  'nana
+                                  (if(= numero 8)
+                                     'haci
+                                     (if(= numero 9)
+                                        'kyu
+                                        (if(= numero 10)
+                                           'ja
+                                            (if(= 0 (modulo numero 10 ))
+                                              (cons (chinos (quotient numero 10 )) (cons 'ju empty))
+                                              (cons (chinos (quotient numero 10 )) (cons 'ju (cons (chinos (modulo numero 10 )) empty)))
+                                              )
+                                           
+                                     )
+                                     ))))))))))
+  ))
 
 ;; Función que recibe una lista de números entre 0 y 99 y regresa una lista con su representación en
 ;; japones.
 ;; a-japones: (listof number) -> (listof string)
-(define (a-japones lista)
-    #| Aquí va su código. |#)
+(define (a-japones  lista)
+  (map chinos lista))
 
 ;; Función que recibe una lista de números y regresa una nueva lista que contiene únicamente aquellos
 ;; que son felices.
 (define (felices lista)
-    #| Aquí va su código. |#)
+  (filter es-feliz? lista) )
+
 
 ;; Función que encuentra el factorión de un número.
 ;; factorionr: number -> number
