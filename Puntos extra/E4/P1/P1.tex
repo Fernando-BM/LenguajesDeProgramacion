@@ -1,0 +1,140 @@
+\documentclass[spanish,english]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{xcolor}
+
+\usepackage{listings}
+\renewcommand{\lstlistingname}{Listing}
+\usepackage{babel}
+\usepackage{setspace}
+\usepackage{vmargin}
+\usepackage{booktabs}
+\usepackage{multirow}
+\providecommand{\abs}[1]{\lvert#1\rvert}
+\setpapersize{A4}
+
+
+
+\title{Universidad Nacional Autónoma de México\\
+Facultad de Ciencias \\
+Lenguajes de Programación \\
+Punto Extra}
+\author{Bernal Mar\'inez Fernando}
+\date{Diciembre 2018}
+
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{amsmath}
+
+\begin{document}
+
+\maketitle
+
+\section{Código}
+
+\item[\hspace*{1cm} \hspace*{1cm}
+\hspace*{1cm} \hspace*{1cm}]
+\begin{tabular}{|c|}
+\hline 
+\begin{lstlisting}
+interface MyGreeting {
+	String processName(String str);
+}
+public static void main(String args[]) {
+	MyGreeting morningGreeting = (str) -> "Good Morning " + str + "!";
+	MyGreeting eveningGreeting = (str) -> "Good Evening " + str + "!";
+  
+	System.out.println(morningGreeting.processName("Luis"));
+	System.out.println(eveningGreeting.processName("Jessica"));	
+}
+\end{lstlisting}
+\hspace*{1cm} \hspace*{1cm} \hspace*{1cm} \hspace*{1cm} \tabularnewline
+\hline 
+\end{tabular}
+
+\subsection{Código 1}
+
+¿Cúal es el resultado del código 1?\\\\
+
+\textcolor{red}{a.  Output: Good Morning Luis! \\
+	Output: Good Evening Jessica!}\\\\ 
+b. Output: Good Evening Luis! \\
+	Output: Good Morning Jessica!\\\\
+c. Output: Good Evening Jessica!\\ 
+	Output: Good Morning Luis!\\\\
+d. Output: Good Evening Jessica\\
+	Output: Good Morning Luis\\\\
+e. No compila\\
+
+
+\section{Código}
+
+\item[\hspace*{1cm} \hspace*{1cm}
+\hspace*{1cm} \hspace*{1cm}]
+\begin{tabular}{|c|}
+\hline 
+\begin{lstlisting}
+interface MyString {
+	String myStringFunction(String str);
+}
+
+public static void main (String args[]) {
+	MyString rStr = (str) -> {
+		String result = "";
+		
+		for(int i = str.length()-1; i >= 0; i--)
+			result += str.charAt(i);
+		
+		return result;
+	};
+	System.out.println(rStr.myStringFunction("Lambda Demo")); 
+}
+\end{lstlisting}
+\hspace*{1cm} \hspace*{1cm} \hspace*{1cm} \hspace*{1cm} \tabularnewline
+\hline 
+\end{tabular}
+
+\subsection{Código 2}
+
+¿Cúal es el resultado del código 2?\\\\
+\textcolor{red}{a. Output: omeD adbmaL}\\
+b. Output: omeD\\
+c. Output: Lambda \\
+d. Output: Demo Lambda\\
+e. No compila\\
+
+\section{Código}
+
+\item[\hspace*{1cm} \hspace*{1cm}
+\hspace*{1cm} \hspace*{1cm}]
+\begin{tabular}{|c|}
+\hline 
+\begin{lstlisting}
+interface NumericTest {
+	boolean computeTest(int n); 
+}
+
+public static void main(String args[]) {
+	NumericTest isE = (n) -> (n % 2) == 0;
+	NumericTest isN = (n) -> (n < 0);
+
+	System.out.println(isE.computeTest(5));
+	System.out.println(isN.computeTest(-5));
+}
+\end{lstlisting}
+\hspace*{1cm} \hspace*{1cm} \hspace*{1cm} \hspace*{1cm} \tabularnewline
+\hline 
+\end{tabular}
+
+\subsection{Código 3}
+
+¿Cúal es el resultado del código 3?\\\\
+\textcolor{red}{a. Output: false\\
+   Output: true}\\\\
+b. Output: true\\
+   Output: false\\\\
+c. Output: -5\\
+   Output: 5\\ \\
+d. Output: 50\\
+   Output: -50\\ \\
+e. No compila\\
+\end{document}
