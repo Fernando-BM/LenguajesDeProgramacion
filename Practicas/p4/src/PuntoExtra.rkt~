@@ -1,0 +1,28 @@
+#lang plai
+
+(require "grammars.rkt")
+(require "parser.rkt")
+(require "desugar.rkt")
+(require "interp.rkt")
+
+
+(define expr01 'fer)
+(define expr02 '14
+(define expr03 
+    '{+ {/ 20 2 2} 
+	{- 1 2 3 4} 
+        {* 4 5 6 5} 
+        {% 20 2 3} 
+        {min 1 7 2 9}))
+(define expr04
+    '{with {{a 3} {b 4}}
+        {+ a b}})
+(define expr05
+    '{with* {{a 2} {b {+ a {* a 2}}} {c {* {* a 2} b}}}
+        {with* {{d {+ c 1}} {e d}}
+            {+ a b c d e}}})
+(define expr07
+    '{{fun {a b} {/ {* a b} 6}} 6 2})
+(define expr06
+    '{fun {a b c} {/ {+ {* b -1} {sqrt {- {pow b 2} {* 4 a c}}}} {* 2 a}}})
+(define expr07 'true)

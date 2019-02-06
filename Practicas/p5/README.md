@@ -3,12 +3,12 @@
   <h1>Lenguajes de Programación, 2019-1</h1>
 </p>
 
-Práctica 2: Tipos de datos abstractos
--------------------------------------
+Práctica 5: Evaluación perezosa
+------------------------------------------------
 
 ### Fecha de entrega
 
-6 de septiembre de 2018
+25 de octubre de 2018
 
 ### Integrantes
 

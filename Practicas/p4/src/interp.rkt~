@@ -1,0 +1,72 @@
+#lang plai
+
+(require "grammars.rkt")
+
+;; Analizador semántico.
+;; Interpreta el árbol de sintaxis abstracta generado por el desendulzador.
+;; interp: FBAE -> FBAE-Value
+(define (interp expr env)
+  (match expr
+    [(id i) (lookup i env)]
+    [(num n) (numV n)]
+    [(bool b) (boolV b)]
+    [(op f args) (opV f (foldr (lambda (v l) (cons (interp v env) l)) '() args))]
+    [(fun param body) (closureV param body env)]
+    [(app fun-expr arg) (interp-app fun-expr expr arg env)]))
+
+
+;;Funcion auxiliar que verfica si recibe un id o un fun
+;;interp-app: FBAE -> FBAE-Value
+(define (interp-app fun-expr expr arg env)
+  (match fun-expr
+       [(id i) (interp (app(fun
+                         (closureV-params (interp fun-expr env))
+                         (closureV-body (interp fun-expr env))) arg)
+                       (closureV-env (interp fun-expr env)))]
+       [(fun param body)(appV fun-expr arg expr env)]))
+
+
+;;Función auxiliar recursiva que evalúa funciones
+;;appV: FBAE -> FBAE-Value
+(define (appV fun-val args body env)
+  (match args
+    ['() (interp body env)]
+    [else (appV (getBody fun-val) (cdr args) (getBody fun-val) 
+                                  (aSub (fun-param fun-val)
+                                         (interp (car args) env)
+                                         env))]))
+
+;;Función auxiliar que da el cuerpo de un closure o función.
+;;getBody: FBAE -> FBAE
+(define (getBody fun-val)
+  (match fun-val
+    [(fun pram body) body]
+    [(closureV pram body env) body]))
+
+;; Busca el valor de un identificador en el ambiente.
+;; Si el identificador no se encuentra, se genera el error "Identificador libre".
+;; lookup: symbol Env -> FBAE-Value
+(define (lookup id env)
+    (match env
+        [(mtSub) (error 'interp "Identificador libre")]
+        [(aSub name value rest-env) (if (symbol=? name id) value (lookup id rest-env))]))
+
+
+;;Función auxiliar que dada un operación y una lista de argumentos
+;;y los evalúa
+(define (opV f l)
+  (let ([result (apply f (map (λ (v) (match v
+                                       [(? numV?) (numV-n v)]
+                                       [(? boolV?) (boolV-b v)])) l))])
+    (if (op-number? (list + - * / mmodulo min max mexpt sqrt ) f)
+        (numV result)
+        (boolV result))))
+
+;; Función auxiliar que verifica si un elemento pertenece a una lista.
+;; lista-contiene: list any -> boolean
+(define (op-number? l e)
+  (match l
+    ['() #f]
+    [(cons x xs) (if (equal? e x) #t (op-number? xs e))]))
+
+

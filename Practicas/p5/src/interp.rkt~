@@ -1,0 +1,90 @@
+#lang plai
+
+(require "grammars.rkt")
+
+;; Analizador semántico.
+;; Interpreta el árbol de sintaxis abstracta generado por el desendulzador.
+;; interp: CFBAE/L -> CFBAE/L-Value
+(define (interp expr env)
+  (match expr
+    [(id i) (lookup i env)]
+    [(num n) (numV n)]
+    [(bool b) (boolV b)]
+    [(op f args) (opV f (map (λ (v) (strict (interp v env))) args))]
+    [(iF expr then-expr else-expr) (if (boolV-b (strict (interp expr env)))
+                                       (interp then-expr env)
+                                       (interp else-expr env))]
+    [(fun param body) (closureV param body env (make-hash empty))]
+    [(app fun-expr arg)
+     (let([fun-val (strict (interp fun-expr env))])
+       (let([resultado (hash-ref (ClosureV-tbl fun-val) (closureV-param fun-val) 'ninguno)])
+         (cond
+           [(equal? resultado 'ninguno)
+            (define nuevo (interp-app fun-expr expr arg env))
+            (hash-set! (ClosureV-tbl fun-val) (closureV-param fun-val) nuevo)
+            nuevo]
+           [else resultado])))]))
+;;Creacon de unatavla de tipo hash
+(define ClosureV-tbl
+         (make-hash '()))
+
+;;Funcion auxiliar que verfica si recibe un id o un fun
+;;interp-app: FBAE -> FBAE-Value
+(define (interp-app fun-expr expr arg env)
+  (match fun-expr
+    [(id i) (interp (app(fun
+                         (closureV-param (strict (interp fun-expr env)))
+                         (closureV-body (strict (interp fun-expr env)))) arg)
+                    (closureV-env (strict (interp fun-expr env))))]
+    [(fun param body)(appV fun-expr arg expr env)]))
+
+
+;;Función auxiliar recursiva que evalúa funciones
+;;appV: FBAE -> FBAE-Value
+(define (appV fun-val args body env)
+  (match args
+    ['() (strict (interp body env))]
+    [else (appV (getBody fun-val) (cdr args) (getBody fun-val) 
+                (aSub (fun-param fun-val)
+                      (exprV (car args) env)
+                      env))]))
+
+;;Función auxiliar que da el cuerpo de un closure o función.
+;;getBody: FBAE -> FBAE
+(define (getBody fun-val)
+  (match fun-val
+    [(fun pram body) body]
+    [(closureV pram body env hash) body]))
+
+;; Busca el valor de un identificador en el ambiente.
+;; Si el identificador no se encuentra, se genera el error "Identificador libre".
+;; lookup: symbol Env -> FBAE-Value
+(define (lookup id env)
+  (match env
+    [(mtSub) (error 'interp "Identificador libre")]
+    [(aSub name value rest-env) (if (symbol=? name id) value (lookup id rest-env))]))
+
+
+;;Función auxiliar que dada un operación y una lista de argumentos
+;;y los evalúa
+(define (opV f l)
+  (let ([result (apply f (map (λ (v) (match v
+                                       [(? numV?) (numV-n v)]
+                                       [(? boolV?) (boolV-b v)])) l))])
+    (if (op-number? (list + - * / mmodulo min max mexpt sqrt ) f)
+        (numV result)
+        (boolV result))))
+
+;; Función auxiliar que verifica si un elemento pertenece a una lista.
+;; lista-contiene: list any -> boolean
+(define (op-number? l e)
+  (match l
+    ['() #f]
+    [(cons x xs) (if (equal? e x) #t (op-number? xs e))]))
+
+;; Función que fuerza la evaluación de una expresión CFBAE/L-Value.
+;; strict: CFBAE/L-Value -> CFBAE/L-Value
+(define (strict e)
+  (match e
+    [(exprV expr env) (strict (interp expr env))]
+[else e]))
