@@ -1,0 +1,31 @@
+#lang plai
+;; area-cilindro : number number -> number
+( define ( area-cilindro d h )
+   (let([r (/ d 2)])
+(*(*(* 2 pi) r)(+ r h)))
+   )
+
+
+
+
+;; Función que calcula el tipo de multa que recibirá un conductor.
+;; tipo-multa: number boolean -> symbol
+
+( define ( tipo-multa v c)
+   (if(equal? c #t)
+
+      (let ([v (* v 5)])
+        (cond
+          [(and (> v 0) (< v 61)) 'sin-multa]
+          [(and (> v 59)(< v 81)) 'multa-pequena]
+          [ (> v 80) 'multa-grande]
+          [else (error 'velocidad-incorrecta)]))  
+   
+      (cond
+        [(and (> v 0) (< v 61)) 'sin-multa]
+        [(and (> v 59)(< v 81)) 'multa-pequena]
+        [ (> v 80) 'multa-grande]
+        [else (error 'velocidad-incorrecta)])
+
+   )
+)

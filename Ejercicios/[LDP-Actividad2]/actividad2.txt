@@ -1,0 +1,34 @@
+Cuestionario
+1. ¿Cómo se crea un par en Racket? ¿Qué funciones permiten acceder al primer y segundo elemento de un par respectivamente?
+
+Se crea con cons (cons x y), car y cdr ó frist y last nos permite acceder al primer y segundo elemento respectivamente.
+
+2. ¿Cómo se define una lista en Racket? ¿Por qué es posible crearlas mediante un par? ¿Cuáles son las tres formas de construir una lista?
+
+Una lista se define como cabeza y rabo (x :xs)
+Esposible crearlas mediante par por que un par no tiene efectos secundarios, ademas que va construyecto de dos en dos hasta lograr el tamaño
+de cualquier lista.
+Las tres maneras de construir listas son: (list elem elem2) y (cons x xs) quote(elem elem1)
+
+3. ¿Qué utilidad tiene el definir una lista mediante el mecanismo de citado (quote) en el curso de Lenguajes de Programación?
+
+Que ya no evalua lo que hay dentro, lo toma literal.
+
+4. ¿En qué consiste la técnica de apareamiento de patrones? ¿Cómo se aplica esta técnica para definir funciones recursivas sobre listas?
+
+Realiza una caza de los patrones, es decir, se define los posibles casos que siempre aparecen al definir una estructura o problema y
+apartir de ello se crea la solución del problema. 
+
+
+ En el caso de una lista los patrones de serian una lista vacia o una lista con cabeza y cola.
+'()
+cons( x xs)
+
+
+Integrantes
+
+    Bernal Martínez Fernando | ferchocc@ciencias.unam.mx
+    Luna Vázquez Felipe Alberto | aluna1997@ciencias.unam.mx
+    Hernández Chávez Jorge Argenis | argenis616@ciencias.unam.mx
+    Castro Espinosa Erick Enrque | ericken15@ciencias.unam.mx
+
